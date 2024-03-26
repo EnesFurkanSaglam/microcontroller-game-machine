@@ -1,0 +1,17 @@
+Eklenecekler
+
+
+İlk açılacak ekranda “Başlat” ve “Çıkış” seçeneklerV olacak. Kullanıcı bunlara aşağı ve
+yukarı tuşlarıyla gelerek 3.bVr tuş Vle menüde bulunan seçeneklerden bVrVnV
+seçebVlecektVr.
+
+
+3 led olacak canların gösterilebilmesi için
+
+
+
+sıkıntılar
+
+oled ekran çalışmıyor
+kod yazılmadı
+
