@@ -5,30 +5,35 @@
 #define SCREEN_WIDTH 128 // OLED ekran genişliği
 #define SCREEN_HEIGHT 64 // OLED ekran yüksekliği
 
-#define OLED_RESET    -1 // OLED reset pini, -1 ise reset kullanılmıyor
+// OLED ekran bağlantı pinleri
+#define OLED_RESET    -1
+#define OLED_ADDR     0x3C
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 void setup() {
+  // Seri bağlantı hızı ayarla
   Serial.begin(9600);
 
-  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
-    Serial.println(F("SSD1306 başlatılamadı!"));
+  // OLED ekran başlatma
+  if(!display.begin(SSD1306_SWITCHCAPVCC, OLED_ADDR)) {
+    Serial.println(F("SSD1306 ekran başlatılamadı! Bağlantıları kontrol edin."));
     for(;;);
   }
 
-  display.display();
-  delay(2000); // Ekranı 2 saniye beklet
+  // Ekranı temizle
   display.clearDisplay();
+
+  // "Hello, World!" mesajını ekrana yazdır
+  display.setTextSize(1);      
+  display.setTextColor(SSD1306_WHITE); 
+  display.setCursor(0, 0);    
+  display.println("Hello, World!"); 
+  display.display();
+  
 }
 
 void loop() {
-  display.setTextSize(1);
-  display.setTextColor(SSD1306_WHITE);
-  display.setCursor(0, 0);
-  display.println("Merhaba, Dunya!");
-
-  display.display();
-  delay(1000); // 1 saniye beklet
-  display.clearDisplay();
+  // Döngüde yapılacak bir şey yok
 }
 
+Ax34   a45e
