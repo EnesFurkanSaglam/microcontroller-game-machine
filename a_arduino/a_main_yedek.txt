@@ -1,0 +1,164 @@
+#include <U8g2lib.h>
+#include <Wire.h>
+
+U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0, /* reset=*/ U8X8_PIN_NONE); // U8g2 Contructor
+
+void setup() {
+  
+pinMode(2,OUTPUT);
+pinMode(3,OUTPUT);
+pinMode(4,OUTPUT);
+pinMode(5,OUTPUT);
+pinMode(6,OUTPUT);
+pinMode(7,OUTPUT);
+pinMode(8,OUTPUT);
+u8g2.begin();
+
+}
+
+void loop() {
+  
+zero();
+one();
+two();
+three();
+four();
+five();
+six();
+seven();
+eight();
+nine();
+oled();
+
+}
+
+U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0, /* reset=*/ U8X8_PIN_NONE); // U8g2 Contructor
+u8g2.begin();
+  u8g2.clearBuffer();          // clear the internal memory
+  u8g2.setFont(u8g2_font_ncenB08_tr); // choose a suitable font
+  u8g2.drawStr(0,10,"Hello, world!");  // write something to the internal memory
+  u8g2.sendBuffer();          // transfer internal memory to the display
+  delay(1000);  
+
+void oled(){
+  u8g2.begin();
+  u8g2.clearBuffer();          // clear the internal memory
+  u8g2.setFont(u8g2_font_ncenB08_tr); // choose a suitable font
+  u8g2.drawStr(0,10,"Hello, world!");  // write something to the internal memory
+  u8g2.sendBuffer();          // transfer internal memory to the display
+  delay(1000);                 // delay to display the screen
+}
+
+void zero() {
+  digitalWrite(2,HIGH);
+  digitalWrite(3,HIGH);
+  digitalWrite(4,HIGH);
+  digitalWrite(5,HIGH);
+  digitalWrite(6,HIGH);
+  digitalWrite(7,HIGH);
+  digitalWrite(8,LOW);
+  delay(1000);
+}
+void one(){
+  digitalWrite(2,LOW);
+  digitalWrite(3,HIGH);
+  digitalWrite(4,HIGH);
+  digitalWrite(5,LOW);
+  digitalWrite(6,LOW);
+  digitalWrite(7,LOW);
+  digitalWrite(8,LOW);
+  delay(1000);
+  
+}
+
+void two() {
+  digitalWrite(2,HIGH);
+  digitalWrite(3,HIGH);
+  digitalWrite(4,LOW);
+  digitalWrite(5,HIGH);
+  digitalWrite(6,HIGH);
+  digitalWrite(7,LOW);
+  digitalWrite(8,HIGH);
+  delay(1000);
+}
+
+ void three() {
+  digitalWrite(2,HIGH);
+  digitalWrite(3,HIGH);
+  digitalWrite(4,HIGH);
+  digitalWrite(5,HIGH);
+  digitalWrite(6,LOW);
+  digitalWrite(7,LOW);
+  digitalWrite(8,HIGH);
+  delay(1000);
+  
+ }
+
+void four() {
+  digitalWrite(2,LOW);
+  digitalWrite(3,HIGH);
+  digitalWrite(4,HIGH);
+  digitalWrite(5,LOW);
+  digitalWrite(6,LOW);
+  digitalWrite(7,HIGH);
+  digitalWrite(8,HIGH);
+  delay(1000);
+  
+}
+
+void five() {
+  digitalWrite(2,HIGH);
+  digitalWrite(3,LOW);
+  digitalWrite(4,HIGH);
+  digitalWrite(5,HIGH);
+  digitalWrite(6,LOW);
+  digitalWrite(7,HIGH);
+  digitalWrite(8,HIGH);
+  delay(1000);
+  
+}
+
+void six() {
+  digitalWrite(2,HIGH);
+  digitalWrite(3,LOW);
+  digitalWrite(4,HIGH);
+  digitalWrite(5,HIGH);
+  digitalWrite(6,HIGH);
+  digitalWrite(7,HIGH);
+  digitalWrite(8,HIGH);
+  delay(1000);
+}
+
+void seven() {
+  digitalWrite(2,HIGH);
+  digitalWrite(3,HIGH);
+  digitalWrite(4,HIGH);
+  digitalWrite(5,LOW);
+  digitalWrite(6,LOW);
+  digitalWrite(7,LOW);
+  digitalWrite(8,LOW);
+  delay(1000);
+  }
+
+void eight() {
+  digitalWrite(2,HIGH);
+  digitalWrite(3,HIGH);
+  digitalWrite(4,HIGH);
+  digitalWrite(5,HIGH);
+  digitalWrite(6,HIGH);
+  digitalWrite(7,HIGH);
+  digitalWrite(8,HIGH);
+  delay(1000);
+  
+}
+
+void nine() {
+  digitalWrite(2,HIGH);
+  digitalWrite(3,HIGH);
+  digitalWrite(4,HIGH);
+  digitalWrite(5,HIGH);
+  digitalWrite(6,LOW);
+  digitalWrite(7,HIGH);
+  digitalWrite(8,HIGH);
+  delay(1000);
+}
