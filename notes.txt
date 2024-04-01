@@ -1,17 +1,15 @@
-Eklenecekler
+
+Eksikler:
+
++ İlk açılacak ekranda “Başlat” ve “Çıkış” seçenekleri olacak. Kullanıcı bunlara aşağı ve yukarı tuşlarıyla gelerek 3.bir tuş ile menüde bulunan seçeneklerden birini seçebilecektir.
 
 
-İlk açılacak ekranda “Başlat” ve “Çıkış” seçeneklerV olacak. Kullanıcı bunlara aşağı ve
-yukarı tuşlarıyla gelerek 3.bVr tuş Vle menüde bulunan seçeneklerden bVrVnV
-seçebVlecektVr.
+- “Başlat” tuşuyla oyun ekranı açılacak ve oyun başlayacaktır.”Çıkış” seçeneğinde ise “Oyunumuza gösterdiğiniz ilgi için teşekkürler” yazısı yazacaktır
 
 
-3 led olacak canların gösterilebilmesi için
+- Her tuğla kırıldığında yüzde 10 şans ile bir obje düşürecektir. Bu obje kırıldığı tuğladan sabit olarak aşağı yöne doğru hareket edecektir. Oyuncu bu objeyi alırsa can sayısı 1 artacaktır. Bu eşzamanlı olarak led ile
+gösterilecektir.(Kullanıcının 2 canı varsa aldığı canla beraber 3 canı led ile gösterilecektir.
 
+- Oyuncunun 3 canı bittiğinde ekranda son olarak 3 saniye skor puanı belirerek tekrar ana menüye geri döner
 
-
-sıkıntılar
-
-oled ekran çalışmıyor
-kod yazılmadı
-
+- Oyundaki tüm tuğlalar bitince 5 saniye ara ekran girecek ve daha sonra diğer bölüm başlayacaktır. Bu bölümdeki tuğla dizaynının aynı olmaması beklenmektedir. Skorun kaldığı yerden devam etmesi beklenmektedir. Ayrıca her bölüm geçildiğinde topun hızı bir önceki tura göre yüzde 20 artacaktır.

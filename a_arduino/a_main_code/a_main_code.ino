@@ -2,28 +2,39 @@
 
 U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0, /* reset=*/ U8X8_PIN_NONE);
 
-const int SIZE = 16;
+const byte SIZE = 16;
 
-const int ballSize = 1;
-int ballPositionX = 64;
-int ballPositionY = 48;
-int ballSpeedX = 1;
-int ballSpeedY = -1;
+const byte ballSize = 3;
+byte ballPositionX = 64;
+byte ballPositionY = 48;
+byte ballSpeedX = 1;
+byte ballSpeedY = -1;
 
-const int paddleHeight = 3;
-const int paddleWidth = 10;
-int paddleX = 59;
-int paddleY = 54;
+const byte paddleHeight = 3;
+const byte paddleWidth = 128;
+byte paddleX = 59;
+byte paddleY = 54;
 
-const int led1 = 11;
-const int led2 = 12;
-const int led3 = 13;
+const byte led1 = 11;
+const byte led2 = 12;
+const byte led3 = 13;
+
+byte total = 1;
+byte livesNumber = 3;
+byte totalNext = 0;
+
+byte buttonSelect = 0;
+byte buttonUp = 9;
+byte buttonDown = 10;
+
+byte menuOption = 0;
+
 
 struct Box {
-  int x;
-  int y;
-  int width;
-  int height;
+  byte x;
+  byte y;
+  byte width;
+  byte height;
 };
 
 Box level1[] = {
@@ -251,40 +262,52 @@ void ledAc(int led){
 }
 void ledKapat(int led){
   digitalWrite(led, LOW);
-
 }
 
 void drawBall() {
   u8g2.clearBuffer(); // Önceki çizimleri temizle
-  u8g2.drawDisc(ballPositionX, ballPositionY, ballSize); // Topu çiz
+  u8g2.drawBox(ballPositionX, ballPositionY, ballSize, ballSize); // Topu çiz
   u8g2.sendBuffer(); // Çizimi ekrana gönder
 }
 
-
-
-
-void updateBall() {
-  u8g2.clearBuffer();
-  u8g2.drawDisc(ballPositionX, ballPositionY, ballSize); // Topu çiz
-  u8g2.sendBuffer();
-
-  ballPositionX += ballSpeedX; // Topun x konumunu güncelle
-  ballPositionY += ballSpeedY; // Topun y konumunu güncelle
-
-  // Topun ekran sınırlarına çarpmasını kontrol et
-  if (ballPositionX <= 0 || ballPositionX >= 127) {
-    ballSpeedX = -ballSpeedX; // X yönlü hızı tersine çevir
-  }
-  if (ballPositionY <= 0 || ballPositionY >= 63) {
-    ballSpeedY = -ballSpeedY; // Y yönlü hızı tersine çevir
-  }
-
-  // Topun paddle'a çarpmasını kontrol et
-  // sıkıntı var
-  if (ballPositionY >= paddleY - ballSize && ballPositionX >= paddleX && ballPositionX <= paddleX + paddleWidth) {
-    ballSpeedY = -ballSpeedY; // Y yönlü hızı tersine çevir
+void displayNumber(int num) {
+  switch(num) {
+    case 1:
+      one();
+      break;
+    case 2:
+      two();
+      break;
+    case 3:
+      three();
+      break;
+    case 4:
+      four();
+      break;
+    case 5:
+      five();
+      break;
+    case 6:
+      six();
+      break;
+    case 7:
+      seven();
+      break;
+    case 8:
+      eight();
+      break;
+    case 9:
+      nine();
+      break;
+    default:
+      // Eğer num 0-9 arasında değilse herhangi bir işlem yapma
+      break;
   }
 }
+
+
+
+
 
 void drawPaddle(){
   int potansiyometreDegeri = analogRead(A0); // Potansiyometrenin değerini oku (0-1023 arası)
@@ -297,10 +320,163 @@ void drawPaddle(){
 }
 
 
+void drawMenu() {
+  u8g2.clearBuffer();
+  u8g2.setFont(u8g2_font_ncenB14_tr);
+  u8g2.setCursor(10, 20);
+  u8g2.print("Start");
+  u8g2.setCursor(10, 40);
+  u8g2.print("Exit");
+
+  // Highlight the selected menu option
+  u8g2.setCursor(0, menuOption == 0 ? 20 : 40);
+  u8g2.print(">");
+
+  u8g2.sendBuffer();
+}
+
+
+void displayMessage(const char* message,byte size) {
+
+  u8g2.clearBuffer();
+  u8g2.setFont(u8g2_font_6x12_tr);
+  u8g2.setCursor(0, 10+size);
+  u8g2.print(message);
+  u8g2.sendBuffer();
+
+}
+
+void updateBall(Box level[]) {
+
+  u8g2.clearBuffer();
+  u8g2.drawBox(ballPositionX, ballPositionY, ballSize, ballSize); // Topu çiz
+  u8g2.sendBuffer();
+
+  ballPositionX += ballSpeedX; // Topun x konumunu güncelle
+  ballPositionY += ballSpeedY; // Topun y konumunu güncelle
+
+  // Topun ekran sınırlarına çarpmasını kontrol et
+  if (ballPositionX <= 0 || ballPositionX >= 127) {
+    ballSpeedX = -ballSpeedX; // X yönlü hızı tersine çevir
+  }
+
+  // top ekranın üstüne geldiğinde yönü tersine çevir fakat altına geldiğinde tersine çevirme
+  if(ballPositionY <= 0){
+        ballSpeedY = -ballSpeedY; // Y yönlü hızı tersine çevir
+  }
+
+  // can sayısına göre topu kaçırma işlemleri
+  if(ballPositionY >= 63){
+    livesNumber = livesNumber - 1;
+    if(livesNumber == 2){
+      digitalWrite(led3, LOW);
+    ballPositionX = 64; // Topu başlangıç pozisyonuna geri döndür
+    ballPositionY = 48; // Topu başlangıç pozisyonuna geri döndür
+    ballSpeedY = -ballSpeedY; // Yönü tersine çevir
+    }else if(livesNumber == 1){
+      digitalWrite(led2, LOW);
+    ballPositionX = 64; // Topu başlangıç pozisyonuna geri döndür
+    ballPositionY = 48; // Topu başlangıç pozisyonuna geri döndür
+    ballSpeedY = -ballSpeedY; // Yönü tersine çevir
+    }else if(livesNumber == 0){
+      digitalWrite(led1, LOW);
+    ballPositionX = 200;
+    ballPositionY = 200;
+    }
+  }
+
+  // Topun paddle'a çarpmasını kontrol et
+  if (ballPositionY + ballSize >= paddleY && ballPositionX >= paddleX && ballPositionX <= paddleX + paddleWidth) {
+    ballSpeedY = -ballSpeedY; // Y yönlü hızı tersine çevir
+  }
+
+  // Topun bloğa çarpması kontrolü
+  for (int i = 0; i < SIZE; i++) {
+    if (ballPositionX + ballSize >= level[i].x && ballPositionX <= level[i].x + level[i].width &&
+        ballPositionY + ballSize >= level[i].y && ballPositionY <= level[i].y + level[i].height) {
+      // Top bloğa çarptığı anda bloğu ekrandan dışarı al ve topu ters çevir
+      level[i].x = -100; // Bloğun x koordinatını ekrandan dışına al
+      level[i].y = -100; // Bloğun y koordinatını ekrandan dışına al
+      ballSpeedY = -ballSpeedY; // Yönü tersine çevir
+      if(total < 10){
+          displayNumber(total);
+      }else{
+        total = 1;
+        one();
+      }
+      total = total + 1;
+      totalNext = totalNext + 1;
+    }
+
+  }
+}
+
+void showBreakScreen() {
+  u8g2.clearBuffer();
+  u8g2.setFont(u8g2_font_ncenB14_tr);
+  u8g2.setCursor(10, 20);
+  u8g2.print("Break Time!");
+  u8g2.sendBuffer();
+  delay(5000); // 5 saniye ara ekranı göster
+}
+
+
+
+void startGame() {
+  
+  while (livesNumber > 0) {
+    if(totalNext >=0 && totalNext < 17){
+      updateBall(level1);
+      drawLevel(level1);
+      drawPaddle();
+      u8g2.sendBuffer();
+    }
+    
+    if(totalNext > 16 && totalNext < 33){
+      
+      updateBall(level2);
+      drawLevel(level2);
+      drawPaddle();
+      u8g2.sendBuffer();
+    }
+    if(totalNext > 32 && totalNext < 49){
+      updateBall(level3);
+      drawLevel(level3);
+      drawPaddle();
+      u8g2.sendBuffer();
+    }
+    if(totalNext > 48 && totalNext < 65){
+      updateBall(level4);
+      drawLevel(level4);
+      drawPaddle();
+      u8g2.sendBuffer();
+    }
+    if(totalNext > 64 && totalNext < 80){
+      updateBall(level5);
+      drawLevel(level5);
+      drawPaddle();
+      u8g2.sendBuffer();
+    }
+
+     if (totalNext == 16 || totalNext == 32 || totalNext == 48 || totalNext == 64) {
+      showBreakScreen();
+    }
+    
+    if (livesNumber == 0) {
+      displayMessage("Game Over", 30);
+      delay(2000);
+      break;
+    }
+  }
+}
+
+
 
 
 void setup() {
+
   u8g2.begin();
+
   pinMode(2,OUTPUT);
   pinMode(3,OUTPUT);
   pinMode(4,OUTPUT);
@@ -308,19 +484,64 @@ void setup() {
   pinMode(6,OUTPUT);
   pinMode(7,OUTPUT);
   pinMode(8,OUTPUT);
+
   pinMode(led1, OUTPUT);
   pinMode(led2, OUTPUT);
   pinMode(led3, OUTPUT);
+
+  pinMode(buttonUp, INPUT_PULLUP);
+  pinMode(buttonDown, INPUT_PULLUP);
+  pinMode(buttonSelect, INPUT_PULLUP);
+
+  // 3 LED'i başlangıçta aç
+  digitalWrite(led1, HIGH);
+  digitalWrite(led2, HIGH);
+  digitalWrite(led3, HIGH);
+
+  // oyunun başlangıcında 7 segmenti 0'dan başlatır !!
+  zero(); 
+
 }
 
 void loop() {
 
-  updateBall();
-  drawPaddle();
-  drawLevel(level1);
-  delay(20); // Topun hareket hızını ayarlar
+  drawMenu();
+
   
+  if (digitalRead(buttonUp) == LOW) {
+    // Move up the menu option
+    menuOption = (menuOption == 0) ? 1 : 0;
+    delay(200); // Debounce delay
+  }
+
+  if (digitalRead(buttonDown) == LOW) {
+    // Move down the menu option
+    menuOption = (menuOption == 0) ? 1 : 0;
+    delay(200); // Debounce delay
+  }
+
+  
+  if (digitalRead(buttonSelect) == LOW) {
+    // Select the menu option
+    if (menuOption == 0) {
+      // Start the game
+      startGame();
+      
+    
+    } else {
+      // Exit the game
+      displayMessage("Thank you for your",5);
+      delay(2000);
+      displayMessage("interest in our game",30);
+      delay(2000);
+      displayMessage("BB",40);
+      while (true); // Endless loop to halt the program
+    }
+  }
+
 }
+
+
 
 
 
