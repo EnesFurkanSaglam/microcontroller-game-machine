@@ -21,7 +21,7 @@ const byte led3 = 13;
 
 byte total = 1;
 byte livesNumber = 3;
-byte totalNext = 0;
+byte totalNext = 1;
 
 byte buttonSelect = 0;
 byte buttonUp = 9;
@@ -254,6 +254,10 @@ void drawLevel(Box level[]) {
     u8g2.drawBox(level[i].x, level[i].y, level[i].width, level[i].height);
   }
   u8g2.sendBuffer();
+
+  
+
+
 }
 
 
@@ -409,65 +413,81 @@ void updateBall(Box level[]) {
     }
 
   }
-}
 
-void showBreakScreen() {
-  u8g2.clearBuffer();
-  u8g2.setFont(u8g2_font_ncenB14_tr);
-  u8g2.setCursor(10, 20);
-  u8g2.print("Break Time!");
-  u8g2.sendBuffer();
-  delay(5000); // 5 saniye ara ekranı göster
+
 }
 
 
 
 void startGame() {
+
+  
   
   while (livesNumber > 0) {
-    if(totalNext >=0 && totalNext < 17){
+
+    
+
+    if(totalNext >=1 && totalNext < 4){
+
       updateBall(level1);
       drawLevel(level1);
       drawPaddle();
       u8g2.sendBuffer();
     }
     
-    if(totalNext > 16 && totalNext < 33){
+    if(totalNext > 4 && totalNext < 8){
+
       
       updateBall(level2);
       drawLevel(level2);
       drawPaddle();
       u8g2.sendBuffer();
     }
-    if(totalNext > 32 && totalNext < 49){
+    if(totalNext > 8 && totalNext < 12){
+
+    
       updateBall(level3);
       drawLevel(level3);
       drawPaddle();
       u8g2.sendBuffer();
     }
-    if(totalNext > 48 && totalNext < 65){
+    if(totalNext > 12 && totalNext < 16){
+
+    
       updateBall(level4);
       drawLevel(level4);
       drawPaddle();
       u8g2.sendBuffer();
     }
-    if(totalNext > 64 && totalNext < 80){
+    if(totalNext > 16 && totalNext < 20){
+
+      
       updateBall(level5);
       drawLevel(level5);
       drawPaddle();
       u8g2.sendBuffer();
     }
 
-     if (totalNext == 16 || totalNext == 32 || totalNext == 48 || totalNext == 64) {
-      showBreakScreen();
+    if (totalNext == 4 || totalNext == 8 || totalNext == 12 || totalNext == 16) {
+      ballPositionX = 64; // Topu başlangıç pozisyonuna geri döndür
+      ballPositionY = 48; // Topu başlangıç pozisyonuna geri döndür
+      ballSpeedY = -ballSpeedY; // Yönü tersine çevir
+      totalNext = totalNext + 1;
+     
+      delay(5000);
+
     }
-    
+
+
+
     if (livesNumber == 0) {
       displayMessage("Game Over", 30);
       delay(2000);
       break;
     }
   }
+
+
 }
 
 
