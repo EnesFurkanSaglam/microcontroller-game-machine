@@ -4,12 +4,83 @@ Eksikler:
 + İlk açılacak ekranda “Başlat” ve “Çıkış” seçenekleri olacak. Kullanıcı bunlara aşağı ve yukarı tuşlarıyla gelerek 3.bir tuş ile menüde bulunan seçeneklerden birini seçebilecektir.
 
 
-- “Başlat” tuşuyla oyun ekranı açılacak ve oyun başlayacaktır.”Çıkış” seçeneğinde ise “Oyunumuza gösterdiğiniz ilgi için teşekkürler” yazısı yazacaktır
++ “Başlat” tuşuyla oyun ekranı açılacak ve oyun başlayacaktır.”Çıkış” seçeneğinde ise “Oyunumuza gösterdiğiniz ilgi için teşekkürler” yazısı yazacaktır
+
++ Oyundaki tüm tuğlalar bitince 5 saniye ara ekran girecek ve daha sonra diğer bölüm başlayacaktır. Bu bölümdeki tuğla dizaynının aynı olmaması beklenmektedir. Skorun kaldığı yerden devam etmesi beklenmektedir. 
 
 
-- Her tuğla kırıldığında yüzde 10 şans ile bir obje düşürecektir. Bu obje kırıldığı tuğladan sabit olarak aşağı yöne doğru hareket edecektir. Oyuncu bu objeyi alırsa can sayısı 1 artacaktır. Bu eşzamanlı olarak led ile
-gösterilecektir.(Kullanıcının 2 canı varsa aldığı canla beraber 3 canı led ile gösterilecektir.
++ Her tuğla kırıldığında yüzde 10 şans ile bir obje düşürecektir. Bu obje kırıldığı tuğladan sabit olarak aşağı yöne doğru hareket edecektir. Oyuncu bu objeyi alırsa can sayısı 1 artacaktır. Bu eşzamanlı olarak led ile gösterilecektir.(Kullanıcının 2 canı varsa aldığı canla beraber 3 canı led ile gösterilecektir.
 
-- Oyuncunun 3 canı bittiğinde ekranda son olarak 3 saniye skor puanı belirerek tekrar ana menüye geri döner
++ Oyuncunun 3 canı bittiğinde ekranda son olarak 3 saniye skor puanı belirerek tekrar ana menüye geri döner
 
-- Oyundaki tüm tuğlalar bitince 5 saniye ara ekran girecek ve daha sonra diğer bölüm başlayacaktır. Bu bölümdeki tuğla dizaynının aynı olmaması beklenmektedir. Skorun kaldığı yerden devam etmesi beklenmektedir. Ayrıca her bölüm geçildiğinde topun hızı bir önceki tura göre yüzde 20 artacaktır.
+- Ayrıca her bölüm geçildiğinde topun hızı bir önceki tura göre yüzde 20 artacaktır.
+
+
+
+void startGame() {
+
+  
+  while (livesNumber > 0) {
+
+    
+    if(totalNext >=1 && totalNext < 4){
+
+      updateBall(level1);
+      drawLevel(level1);
+      drawPaddle();
+      //u8g2.sendBuffer();
+    }
+    
+    if(totalNext > 4 && totalNext < 8){
+
+      
+      updateBall(level2);
+      drawLevel(level2);
+      drawPaddle();
+      
+    }
+    if(totalNext > 8 && totalNext < 12){
+
+    
+      updateBall(level3);
+      drawLevel(level3);
+      drawPaddle();
+      
+    }
+    if(totalNext > 12 && totalNext < 16){
+
+    
+      updateBall(level4);
+      drawLevel(level4);
+      drawPaddle();
+      
+    }
+    if(totalNext > 16 && totalNext < 20){
+
+      
+      updateBall(level5);
+      drawLevel(level5);
+      drawPaddle();
+      
+    }
+
+    if (totalNext == 4 || totalNext == 8 || totalNext == 12 || totalNext == 16) {
+      ballPositionX = 64; // Topu başlangıç pozisyonuna geri döndür
+      ballPositionY = 48; // Topu başlangıç pozisyonuna geri döndür
+      ballSpeedY = -ballSpeedY; // Yönü tersine çevir
+      totalNext = totalNext + 1;
+     
+      delay(5000);
+
+    }
+
+
+    if (livesNumber == 0) {
+      displayMessage("Game Over", 30);
+      delay(2000);
+      break;
+    }
+  }
+
+
+}
