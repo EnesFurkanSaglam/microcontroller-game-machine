@@ -1,53 +1,53 @@
 #include <U8g2lib.h>
 
-U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0,U8X8_PIN_NONE);
+U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0, U8X8_PIN_NONE);
 
-byte secmeButonu = 22;
-byte yukariButonu = 23;
-byte asagiButonu = 24;
+byte buttonSelection = 22;
+byte buttonUp = 23;
+byte buttonDown = 24;
 
-byte menuSecengi = 0;
+byte menuOption = 0;
 
 const byte ledA = 11;
 const byte ledB = 12;
 const byte ledC = 13;
 
-const byte BOYUT = 16;
+const byte SIZE = 16;
 
-const byte pedalYukseklik = 3;
-const byte pedalGenislik = 128;
+const byte pedalHeight = 3;
+const byte pedalWidth = 128;
 int pedalX = 64;
 int pedalY = 60;
 
-const byte topBoyutu = 3;
-byte topX = 64;
-byte topY = 48;
-byte topHizX = 2;
-byte topHizY = -2;
+const byte ballSize = 3;
+byte ballX = 64;
+byte ballY = 48;
+byte ballSpeedX = 2;
+byte ballSpeedY = -2;
 
-byte toplam = 1;
-byte seviyeToplam = 1;
-byte canSayisi = 3;
-byte segmentToplam = 1;
-byte aktifSeviye = 1;
+byte total = 1;
+byte totalLevel = 1;
+byte totalHeart = 3;
+byte totalSegment = 1;
+byte activeLevel = 1;
 
 struct Item {
   byte x;
   byte y;
-  byte boyut;
-  byte hiz;
-  bool aktif;
+  byte size;
+  byte speed;
+  bool active;
 };
 
-struct Kutu {
+struct Box {
   byte x;
   byte y;
-  uint8_t genislik;
-  uint8_t yukseklik;
-  bool aktif;
+  uint8_t width;
+  uint8_t height;
+  bool active;
 };
 
-Kutu level1[] = {
+Box level1[] = {
   { 2, 2, 16, 3, true },
   { 20, 2, 16, 3, true },
   { 38, 2, 16, 3, true },
@@ -66,7 +66,7 @@ Kutu level1[] = {
   { 56, 17, 16, 3, true },
 };
 
-Kutu level2[] = {
+Box level2[] = {
   { 56, 2, 16, 3, true },
   { 38, 7, 16, 3, true },
   { 56, 7, 16, 3, true },
@@ -85,7 +85,7 @@ Kutu level2[] = {
   { 110, 17, 16, 3, true },
 };
 
-Kutu level3[] = {
+Box level3[] = {
   { 29, 2, 16, 3, true },
   { 47, 2, 16, 3, true },
   { 65, 2, 16, 3, true },
@@ -104,7 +104,7 @@ Kutu level3[] = {
   { 83, 27, 16, 3, true },
 };
 
-Kutu level4[] = {
+Box level4[] = {
   { 29, 2, 16, 3, true },
   { 47, 2, 16, 3, true },
   { 65, 2, 16, 3, true },
@@ -123,7 +123,7 @@ Kutu level4[] = {
   { 83, 22, 16, 3, true },
 };
 
-Kutu level5[] = {
+Box level5[] = {
   { 2, 2, 16, 3, true },
   { 56, 2, 16, 3, true },
   { 110, 2, 16, 3, true },
@@ -146,7 +146,7 @@ Item item = { 0, 0, 0, 0, false };
 
 
 
-void sifir() {
+void zero() {
   digitalWrite(2, HIGH);
   digitalWrite(3, HIGH);
   digitalWrite(4, HIGH);
@@ -157,7 +157,7 @@ void sifir() {
   delay(1000);
 }
 
-void bir() {
+void one() {
   digitalWrite(2, LOW);
   digitalWrite(3, HIGH);
   digitalWrite(4, HIGH);
@@ -168,7 +168,7 @@ void bir() {
   delay(1000);
 }
 
-void iki() {
+void two() {
   digitalWrite(2, HIGH);
   digitalWrite(3, HIGH);
   digitalWrite(4, LOW);
@@ -179,7 +179,7 @@ void iki() {
   delay(1000);
 }
 
-void uc() {
+void three() {
   digitalWrite(2, HIGH);
   digitalWrite(3, HIGH);
   digitalWrite(4, HIGH);
@@ -190,7 +190,7 @@ void uc() {
   delay(1000);
 }
 
-void dort() {
+void four() {
   digitalWrite(2, LOW);
   digitalWrite(3, HIGH);
   digitalWrite(4, HIGH);
@@ -201,7 +201,7 @@ void dort() {
   delay(1000);
 }
 
-void bes() {
+void five() {
   digitalWrite(2, HIGH);
   digitalWrite(3, LOW);
   digitalWrite(4, HIGH);
@@ -212,7 +212,7 @@ void bes() {
   delay(1000);
 }
 
-void alti() {
+void six() {
   digitalWrite(2, HIGH);
   digitalWrite(3, LOW);
   digitalWrite(4, HIGH);
@@ -223,7 +223,7 @@ void alti() {
   delay(1000);
 }
 
-void yedi() {
+void seven() {
   digitalWrite(2, HIGH);
   digitalWrite(3, HIGH);
   digitalWrite(4, HIGH);
@@ -234,7 +234,7 @@ void yedi() {
   delay(1000);
 }
 
-void sekiz() {
+void eight() {
   digitalWrite(2, HIGH);
   digitalWrite(3, HIGH);
   digitalWrite(4, HIGH);
@@ -245,7 +245,7 @@ void sekiz() {
   delay(1000);
 }
 
-void dokuz() {
+void nine() {
   digitalWrite(2, HIGH);
   digitalWrite(3, HIGH);
   digitalWrite(4, HIGH);
@@ -256,315 +256,315 @@ void dokuz() {
   delay(1000);
 }
 
-void SayiGoster(int sayi) {
-  switch (sayi) {
+void showNumber(int number) {
+  switch (number) {
     case 1:
-      bir();
+      one();
       break;
     case 2:
-      iki();
+      two();
       break;
     case 3:
-      uc();
+      three();
       break;
     case 4:
-      dort();
+      four();
       break;
     case 5:
-      bes();
+      five();
       break;
     case 6:
-      alti();
+      six();
       break;
     case 7:
-      yedi();
+      seven();
       break;
     case 8:
-      sekiz();
+      eight();
       break;
     case 9:
-      dokuz();
+      nine();
       break;
     default:
       break;
   }
 }
 
-void LedGuncelle() {
-  if (canSayisi >= 1)
+void UpdateLED() {
+  if (totalHeart >= 1)
     digitalWrite(ledA, HIGH);
   else
     digitalWrite(ledA, LOW);
-  if (canSayisi >= 2)
+  if (totalHeart >= 2)
     digitalWrite(ledB, HIGH);
   else
     digitalWrite(ledB, LOW);
-  if (canSayisi >= 3)
+  if (totalHeart >= 3)
     digitalWrite(ledC, HIGH);
   else
     digitalWrite(ledC, LOW);
 }
 
 
-void topCiz() {
-  u8g2.drawBox(topX, topY, topBoyutu, topBoyutu);
+void DrawBall() {
+  u8g2.drawBox(ballX, ballY, ballSize, ballSize);
 }
 
-void pedalCiz() {
-  u8g2.drawBox(pedalX, pedalY, pedalGenislik, pedalYukseklik);
+void DrawPedal() {
+  u8g2.drawBox(pedalX, pedalY, pedalWidth, pedalHeight);
 }
 
-void levelCiz(Kutu level[]) {
-  for (int i = 0; i < BOYUT; i++) {
-    if (level[i].aktif) {
-      u8g2.drawBox(level[i].x, level[i].y, level[i].genislik, level[i].yukseklik);
+void DrawLevel(Box level[]) {
+  for (int i = 0; i < SIZE; i++) {
+    if (level[i].active) {
+      u8g2.drawBox(level[i].x, level[i].y, level[i].width, level[i].height);
     }
   }
 }
 
-void itemCiz() {
-  if (item.aktif) {
-    u8g2.drawBox(item.x, item.y, item.boyut, item.boyut);
+void DrawItem() {
+  if (item.active) {
+    u8g2.drawBox(item.x, item.y, item.size, item.size);
   }
 }
 
-void itemOlustur(byte x, byte y) {
+void CreateItem(byte x, byte y) {
   if (random(0, 10) == 0) {
-    item.aktif = true;
+    item.active = true;
 
     item.x = x;
     item.y = y;
-    item.boyut = 3;
-    item.hiz = 1;
+    item.size = 3;
+    item.speed = 1;
   }
 }
 
-void topuGuncelle(Kutu level[]) {
+void UpdateBall(Box level[]) {
 
-  topX += topHizX;
-  topY += topHizY;
+  ballX += ballSpeedX;
+  ballY += ballSpeedY;
 
-  if (topX <= 0 || topX >= 127) {
-    topHizX = -topHizX;
+  if (ballX <= 0 || ballX >= 127) {
+    ballSpeedX = -ballSpeedX;
   }
 
-  if (topY <= 0) {
-    topHizY = -topHizY;
+  if (ballY <= 0) {
+    ballSpeedY = -ballSpeedY;
   }
 
-  if (topY + topBoyutu >= pedalY && topX >= pedalX && topX <= pedalX + pedalGenislik) {
-    topHizY = -topHizY;
+  if (ballY + ballSize >= pedalY && ballX >= pedalX && ballX <= pedalX + pedalWidth) {
+    ballSpeedY = -ballSpeedY;
   }
 
-  bool seviyeBittiMi = true;
+  bool isLevelFinished = true;
 
-  for (int i = 0; i < BOYUT; i++) {
+  for (int i = 0; i < SIZE; i++) {
 
-    if (level[i].aktif && topX + topBoyutu >= level[i].x && topX <= level[i].x + level[i].genislik && topY + topBoyutu >= level[i].y && topY <= level[i].y + level[i].yukseklik) {
-      level[i].aktif = false;
-      itemOlustur(level[i].x, level[i].y);
-      topHizY = -topHizY;
+    if (level[i].active && ballX + ballSize >= level[i].x && ballX <= level[i].x + level[i].width && ballY + ballSize >= level[i].y && ballY <= level[i].y + level[i].height) {
+      level[i].active = false;
+      CreateItem(level[i].x, level[i].y);
+      ballSpeedY = -ballSpeedY;
 
-      if (segmentToplam < 10) {
-        SayiGoster(segmentToplam);
+      if (totalSegment < 10) {
+        showNumber(totalSegment);
       } else {
-        segmentToplam = 1;
-        bir();
+        totalSegment = 1;
+        one();
       }
 
-      segmentToplam++;
-      toplam = toplam + 1;
-      seviyeToplam++;
+      totalSegment++;
+      total = total + 1;
+      totalLevel++;
 
-      if (seviyeToplam == 17) {
-        seviyeToplam = 0;
-        sifir();
+      if (totalLevel == 17) {
+        totalLevel = 0;
+        zero();
         delay(3000);
-        aktifSeviye++;
-        topX = 64;
-        topY = 48;
-        topHizY = -topHizY;
+        activeLevel++;
+        ballX = 64;
+        ballY = 48;
+        ballSpeedY = -ballSpeedY;
       }
     }
 
-    if (level[i].aktif) {
-      seviyeBittiMi = false;
+    if (level[i].active) {
+      isLevelFinished = false;
     }
   }
 
 
-  if (seviyeBittiMi && seviyeToplam != 0) {
-    aktifSeviye++;
-    topX = 64;
-    topY = 48;
-    topHizY = -topHizY;
+  if (isLevelFinished && totalLevel != 0) {
+    activeLevel++;
+    ballX = 64;
+    ballY = 48;
+    ballSpeedY = -ballSpeedY;
 
-    topHizX = topHizX * 0.2 + topHizX;
-    topHizY = topHizY * 0.2 + topHizY;
+    ballSpeedX = ballSpeedX * 0.2 + ballSpeedX;
+    ballSpeedY = ballSpeedY * 0.2 + ballSpeedY;
   }
 
-  if (topY >= 63) {
-    canSayisi--;
-    if (canSayisi == 2) {
+  if (ballY >= 63) {
+    totalHeart--;
+    if (totalHeart == 2) {
       digitalWrite(ledC, LOW);
-      topX = 64;
-      topY = 48;
-      topHizY = -topHizY;
-    } else if (canSayisi == 1) {
+      ballX = 64;
+      ballY = 48;
+      ballSpeedY = -ballSpeedY;
+    } else if (totalHeart == 1) {
       digitalWrite(ledB, LOW);
-      topX = 64;
-      topY = 48;
-      topHizY = -topHizY;
-    } else if (canSayisi == 0) {
+      ballX = 64;
+      ballY = 48;
+      ballSpeedY = -ballSpeedY;
+    } else if (totalHeart == 0) {
       digitalWrite(ledA, LOW);
-      topX = 200;
-      topY = 200;
+      ballX = 200;
+      ballY = 200;
     }
   }
 }
 
-void itemGuncelle() {
-  if (item.aktif) {
-    item.y += item.hiz;
+void UpdateItem() {
+  if (item.active) {
+    item.y += item.speed;
 
-    if (item.y + item.boyut >= pedalY && item.x >= pedalX && item.x <= pedalX + pedalGenislik) {
-      item.aktif = false;
-      canSayisi++;
-      LedGuncelle();
+    if (item.y + item.size >= pedalY && item.x >= pedalX && item.x <= pedalX + pedalWidth) {
+      item.active = false;
+      totalHeart++;
+      UpdateLED();
     }
 
     if (item.y > 64) {
-      item.aktif = false;
+      item.active = false;
     }
   }
 }
 
-void MenuCiz() {
+void DrawMenu() {
   u8g2.clearBuffer();
   u8g2.setFont(u8g2_font_ncenB14_tr);
   u8g2.setCursor(10, 20);
-  u8g2.print("Baslat");
+  u8g2.print("Start");
   u8g2.setCursor(10, 40);
-  u8g2.print("Cikis");
+  u8g2.print("Exit");
 
-  u8g2.setCursor(0, menuSecengi == 0 ? 20 : 40);
+  u8g2.setCursor(0, menuOption == 0 ? 20 : 40);
   u8g2.print(">");
   u8g2.sendBuffer();
 }
 
 
-void hareketEt() {
+void Move() {
 
   int yeniPaletX = map(analogRead(A0), 0, 1023, 0, 128);
   pedalX = yeniPaletX;
 }
 
-void MesajGoster(const char* message, byte boyut) {
+void ShowMessage(const char* message, byte size) {
 
   u8g2.clearBuffer();
   u8g2.setFont(u8g2_font_6x12_tr);
-  u8g2.setCursor(0, 10 + boyut);
+  u8g2.setCursor(0, 10 + size);
   u8g2.print(message);
 
   u8g2.sendBuffer();
 }
 
-void ToplamGoster() {
+void ShowTotal() {
 
   u8g2.clearBuffer();
   u8g2.setFont(u8g2_font_6x12_tr);
   u8g2.setCursor(0, 30);
-  u8g2.print(toplam - 1);
+  u8g2.print(total - 1);
 
   u8g2.sendBuffer();
 
   delay(3000);
 }
 
-void OyunuBaslat() {
+void StartGame() {
 
-  while (0 < canSayisi) {
+  while (0 < totalHeart) {
 
-    if (aktifSeviye == 1) {
+    if (activeLevel == 1) {
       u8g2.clearBuffer();
-      hareketEt();
-      pedalCiz();
-      topCiz();
-      levelCiz(level1);
-      topuGuncelle(level1);
-      itemGuncelle();
-      itemCiz();
+      Move();
+      DrawPedal();
+      DrawBall();
+      DrawLevel(level1);
+      UpdateBall(level1);
+      UpdateItem();
+      DrawItem();
       u8g2.sendBuffer();
-    } else if (aktifSeviye == 2) {
+    } else if (activeLevel == 2) {
       u8g2.clearBuffer();
-      hareketEt();
-      pedalCiz();
-      topCiz();
-      levelCiz(level2);
-      topuGuncelle(level2);
-      itemGuncelle();
-      itemCiz();
+      Move();
+      DrawPedal();
+      DrawBall();
+      DrawLevel(level2);
+      UpdateBall(level2);
+      UpdateItem();
+      DrawItem();
       u8g2.sendBuffer();
-    } else if (aktifSeviye == 3) {
+    } else if (activeLevel == 3) {
       u8g2.clearBuffer();
-      hareketEt();
-      pedalCiz();
-      topCiz();
-      topuGuncelle(level3);
-      itemGuncelle();
-      itemCiz();
-      levelCiz(level3);
+      Move();
+      DrawPedal();
+      DrawBall();
+      UpdateBall(level3);
+      UpdateItem();
+      DrawItem();
+      DrawLevel(level3);
       u8g2.sendBuffer();
-    } else if (aktifSeviye == 4) {
+    } else if (activeLevel == 4) {
       u8g2.clearBuffer();
-      hareketEt();
-      pedalCiz();
-      topCiz();
-      topuGuncelle(level4);
-      itemGuncelle();
-      itemCiz();
-      levelCiz(level4);
+      Move();
+      DrawPedal();
+      DrawBall();
+      UpdateBall(level4);
+      UpdateItem();
+      DrawItem();
+      DrawLevel(level4);
       u8g2.sendBuffer();
-    } else if (aktifSeviye == 5) {
+    } else if (activeLevel == 5) {
       u8g2.clearBuffer();
-      hareketEt();
-      pedalCiz();
-      topCiz();
-      topuGuncelle(level5);
-      itemGuncelle();
-      itemCiz();
-      levelCiz(level5);
+      Move();
+      DrawPedal();
+      DrawBall();
+      UpdateBall(level5);
+      UpdateItem();
+      DrawItem();
+      DrawLevel(level5);
       u8g2.sendBuffer();
     }
 
-    if (canSayisi == 0) {
-      MesajGoster("Oyun Bitti", 30);
+    if (totalHeart == 0) {
+      ShowMessage("Game Over", 30);
       delay(2000);
-      ToplamGoster();
+      ShowTotal();
 
       digitalWrite(ledA, HIGH);
       digitalWrite(ledB, HIGH);
       digitalWrite(ledC, HIGH);
 
-      toplam = 1;
-      seviyeToplam = 1;
-      canSayisi = 3;
-      segmentToplam = 1;
-      aktifSeviye = 1;
+      total = 1;
+      totalLevel = 1;
+      totalHeart = 3;
+      totalSegment = 1;
+      activeLevel = 1;
 
-      sifir();
+      zero();
 
-      for (int i = 0; i < BOYUT; i++) {
-        level1[i].aktif = true;
-        level2[i].aktif = true;
-        level3[i].aktif = true;
-        level4[i].aktif = true;
-        level5[i].aktif = true;
+      for (int i = 0; i < SIZE; i++) {
+        level1[i].active = true;
+        level2[i].active = true;
+        level3[i].active = true;
+        level4[i].active = true;
+        level5[i].active = true;
       }
 
-      topX = 64;
-      topY = 48;
-      topHizY = -topHizY;
+      ballX = 64;
+      ballY = 48;
+      ballSpeedY = -ballSpeedY;
 
       break;
     }
@@ -591,49 +591,48 @@ void setup() {
   pinMode(7, OUTPUT);
   pinMode(8, OUTPUT);
 
-  pinMode(yukariButonu, INPUT_PULLUP);
-  pinMode(asagiButonu, INPUT_PULLUP);
-  pinMode(secmeButonu, INPUT_PULLUP);
+  pinMode(buttonUp, INPUT_PULLUP);
+  pinMode(buttonDown, INPUT_PULLUP);
+  pinMode(buttonSelection, INPUT_PULLUP);
 
   digitalWrite(ledA, HIGH);
   digitalWrite(ledB, HIGH);
   digitalWrite(ledC, HIGH);
 
-  sifir();
-  pedalCiz();
+  zero();
+  DrawPedal();
 }
 
 void loop() {
 
-  MenuCiz();
+  DrawMenu();
 
-  if (digitalRead(yukariButonu) == LOW) {
+  if (digitalRead(buttonUp) == LOW) {
 
-    menuSecengi = (menuSecengi == 0) ? 1 : 0;
+    menuOption = (menuOption == 0) ? 1 : 0;
     delay(200);
   }
 
-  if (digitalRead(asagiButonu) == LOW) {
+  if (digitalRead(buttonDown) == LOW) {
 
-    menuSecengi = (menuSecengi == 0) ? 1 : 0;
+    menuOption = (menuOption == 0) ? 1 : 0;
     delay(200);
   }
 
-  if (digitalRead(secmeButonu) == LOW) {
+  if (digitalRead(buttonSelection) == LOW) {
 
-    if (menuSecengi == 0) {
+    if (menuOption == 0) {
 
-      OyunuBaslat();
+      StartGame();
 
     } else {
 
-      MesajGoster("Oynadiginiz icin", 5);
+      ShowMessage("Thanks for", 5);
       delay(2000);
-      MesajGoster("Tesekkurler", 30);
+      ShowMessage("Playing", 30);
       delay(2000);
-      MesajGoster("Hosca kalin", 40);
-      while (true)
-        ;
+      ShowMessage("Good bye", 40);
+      while (true);
     }
   }
 }
